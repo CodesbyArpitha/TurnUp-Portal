@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,10 +33,17 @@ namespace TurnUp_Portal.Pages
             //Identify login button and click on it
             IWebElement loginButton = driver.FindElement(By.XPath("//*[@id=\"loginForm\"]/form/div[3]/input[1]"));
             loginButton.Click();
-            Thread.Sleep(3000);
+            //Thread.Sleep(3000);
+
 
             // check if user has logged in successfully
-        IWebElement helloHari = driver.FindElement(By.XPath("//*[@id=\"logoutForm\"]/ul/li/a"));
+            //This is explicit wait
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.XPath("//*[@id=\"logoutForm\"]/ul/li/a")));
+            IWebElement helloHari = driver.FindElement(By.XPath("//*[@id=\"logoutForm\"]/ul/li/a"));
+            
+
+
             if (helloHari.Text == "Hello hari!")
             {
                 Console.WriteLine("User succesfully logged in. Test Passed :)");

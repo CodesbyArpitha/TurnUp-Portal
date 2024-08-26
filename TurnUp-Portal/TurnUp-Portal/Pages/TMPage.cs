@@ -1,10 +1,12 @@
-﻿using OpenQA.Selenium;
+﻿using NUnit.Framework;
+using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using TurnUp_Portal.Utilities;
 
 namespace TurnUp_Portal.Pages
 {
@@ -19,6 +21,8 @@ namespace TurnUp_Portal.Pages
             //Select Time from dropdown
             IWebElement typeCodeDropDown = driver.FindElement(By.XPath("//*[@id=\"TimeMaterialEditForm\"]/div/div[1]/div/span[1]/span/span[2]/span"));
             typeCodeDropDown.Click();
+            //This is Fluent wait
+            Wait.WaitToBeVisible(driver, "Xpath", "//*[@id=\"TypeCode_listbox\"]/li[2]", 1);
             IWebElement timeOption = driver.FindElement(By.XPath("//*[@id=\"TypeCode_listbox\"]/li[2]"));
             timeOption.Click();
 
@@ -49,17 +53,19 @@ namespace TurnUp_Portal.Pages
             goToLastPageButton.Click();
 
             IWebElement newCode = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[3]/table/tbody/tr[last()]/td[1]"));
-            if (newCode.Text == "Practice Time Record")
-            {
-                Console.WriteLine("Time Record Created Successfully!");
+
+            Assert.That(newCode.Text == "Practice Time Record", "Time Record has not been Created");
+            //if (newCode.Text == "Practice Time Record")
+            //{
+            //    Console.WriteLine("Time Record Created Successfully!");
 
 
-            }
+            //}
 
-            else
-            {
-                Console.WriteLine("Time Record has not been Created");
-            }
+            //else
+            //{
+            //    Console.WriteLine("Time Record has not been Created");
+            //}
         }
 
         public void EditTimeRecord(IWebDriver driver)
@@ -100,10 +106,11 @@ namespace TurnUp_Portal.Pages
                 deleteButton.Click();
                 Thread.Sleep(2000);
                 driver.SwitchTo().Alert().Accept();
+                Thread.Sleep(1000);
 
                 IWebElement verifyDeletion = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[3]/table/tbody/tr[last()]/td[1]"));
 
-                if (verifyDeletion.Text != "Edited Code")
+                if (verifyDeletion.Text != "Edited Code" || verifyDeletion == null) 
                 {
                     Console.WriteLine("Record deleted successfully!");
 
@@ -113,6 +120,8 @@ namespace TurnUp_Portal.Pages
                 {
                     Console.WriteLine("Record has not been deleted");
                 }
+
+                
             }
         }
     }
